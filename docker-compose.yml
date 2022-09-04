@@ -1,0 +1,17 @@
+version: '3'
+services:
+  redis:
+    image: "redis:latest"
+    ports:
+      - "6379:6379"
+    volumes:
+      - "./data/redis:/data"
+  myapp:
+    build: .
+    ports:
+      - "80:5000"
+    volumes:
+      - .:/workspace
+    command: gunicorn main:app -b 0.0.0.0:5000 -w 2 --timeout 300
+    depends_on:
+      - redis
